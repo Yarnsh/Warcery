@@ -1,0 +1,84 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Node
+
+const MAX_RUNES = 8
+
+var challengeUI = null
+
+var wiz_name = \"Johnny Macaronni\"
+
+var runes_so_far = []
+var health = 10
+var statuses = {}
+
+var challenge = null
+
+func get_info():
+	return {wiz_name = wiz_name}
+func set_info(info):
+	wiz_name = info[\"wiz_name\"]
+
+func castRune(rune):
+	if runes_so_far.size() == MAX_RUNES:
+		runes_so_far.pop_back()
+	runes_so_far.push_front(rune)
+
+func getRunesSoFar():
+	return runes_so_far
+
+func giveEffect(status, duration):
+	if !statuses.has(status):
+		statuses[status] = 0
+	statuses[status] = max(statuses[status], duration)
+
+func cast_spell(spell):
+	var play_str = wiz_name + \" casts \" + spell.spell + \"!\\n\"
+	runes_so_far.clear()
+	for d in spell.self_damage:
+		play_str += wiz_name + \" hits themselves for \" + str(d) + \".\\n\"
+		health -= d
+	for s in spell.self_status:
+		play_str += wiz_name + \" gains \" + s.name + \".\\n\"
+		statuses[s.name] = s
+	return play_str
+
+func apply_spell(spell):
+	var play_str = \"\"
+	for d in spell.damage:
+		if statuses.has(\"resistance\"):
+			d = min(0, d-statuses[\"resistance\"][\"amount\"])
+		if !statuses.has(\"shield\"):
+			if statuses.has(\"barrier\"):
+				statuses[\"barrier\"][\"amount\"] -= 1
+				play_str += wiz_name + \"'s \" + statuses[\"barrier\"].name + \"absorbs the hit.\\n\"
+				if statuses[\"barrier\"][\"amount\"] <= 0:
+					play_str += wiz_name + \"'s \" + statuses[\"barrier\"].name + \"breaks!\\n\"
+				continue
+			play_str += wiz_name + \" takes \" + str(d) + \" damage.\\n\"
+			health -= d
+		else:
+			play_str += wiz_name + \" blocks the damage.\\n\"
+	for s in spell.status:
+		play_str += wiz_name + \" gains \" + s.name + \".\\n\"
+		statuses[s.name] = s
+	return play_str
+
+func update():
+	var play_str = \"\"
+	for status in statuses.keys():
+		if statuses[status].turns >= 0:
+			statuses[status].turns -= 1
+			if statuses[status].turns <= 0:
+				play_str += wiz_name + \" loses \" + statuses[status].name + \".\\n\"
+				statuses.erase(status)
+	return play_str"
+
+[node name="Wizard" type="Node"]
+
+script = SubResource( 1 )
+_sections_unfolded = [ "Theme", "custom_styles" ]
+
+

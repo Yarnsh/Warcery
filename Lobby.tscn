@@ -1,0 +1,200 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Control
+
+onready var text_area = $VBoxContainer/PanelContainer/Text
+onready var type_area = $VBoxContainer/LineEdit
+onready var challenger_list = $Challengers/Scroll/VBoxContainer
+
+func add_wizard(wizard, myself = false):
+	var cbox = load(\"res://ChallengeBox.tscn\").instance()
+	challenger_list.add_child(cbox)
+	cbox.init_for_wizard(wizard, myself)
+
+remote func rpc_say(text):
+	var peer_id = get_tree().get_rpc_sender_id()
+	var info = get_parent().get_player_info(peer_id)
+	if info:
+		say(info.wiz_name, text)
+
+func say(name, text):
+	text_area.add_text(name + \": \" + text + \"\\n\")
+
+func _on_LineEdit_text_entered(new_text):
+	type_area.clear()
+	say(get_parent().my_info.wiz_name, new_text)
+	rpc(\"rpc_say\", new_text)
+
+remote func set_challenging_you():
+	challenger_list.get_node(str(get_tree().get_rpc_sender_id())).set_challenging_you()
+
+remote func show_combat(wiz1, wiz2):
+	challenger_list.get_node(str(wiz1)).set_in_combat()
+	challenger_list.get_node(str(wiz2)).set_in_combat()
+	challenger_list.get_node(str(wiz1)).rpc(\"set_in_combat\")
+	challenger_list.get_node(str(wiz2)).rpc(\"set_in_combat\")
+	get_parent().show_combat(wiz1, wiz2)"
+
+[node name="Lobby" type="Control"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 40.0
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+script = SubResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 10.0
+margin_top = 305.0
+margin_right = 717.0
+margin_bottom = 589.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 707.0
+margin_bottom = 256.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Text" type="RichTextLabel" parent="VBoxContainer/PanelContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 700.0
+margin_bottom = 249.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = true
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = false
+bbcode_text = ""
+visible_characters = -1
+percent_visible = 1.0
+meta_underlined = true
+tab_size = 4
+text = ""
+scroll_active = true
+scroll_following = true
+selection_enabled = false
+override_selected_font_color = false
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 260.0
+margin_right = 707.0
+margin_bottom = 284.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 1
+size_flags_vertical = 1
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Challengers" type="PanelContainer" parent="." index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 733.0
+margin_right = 1023.0
+margin_bottom = 596.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+
+[node name="Scroll" type="ScrollContainer" parent="Challengers" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 283.0
+margin_bottom = 589.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = true
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+scroll_horizontal_enabled = true
+scroll_horizontal = 0
+scroll_vertical_enabled = true
+scroll_vertical = 0
+scroll_deadzone = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Challengers/Scroll" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 276.0
+margin_bottom = 582.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[connection signal="text_entered" from="VBoxContainer/LineEdit" to="." method="_on_LineEdit_text_entered"]
+
+
