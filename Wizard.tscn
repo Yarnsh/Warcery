@@ -53,9 +53,10 @@ func apply_spell(spell):
 		if !statuses.has(\"shield\"):
 			if statuses.has(\"barrier\"):
 				statuses[\"barrier\"][\"amount\"] -= 1
-				play_str += wiz_name + \"'s \" + statuses[\"barrier\"].name + \"absorbs the hit.\\n\"
+				play_str += wiz_name + \"'s \" + statuses[\"barrier\"].name + \" absorbs the hit.\\n\"
 				if statuses[\"barrier\"][\"amount\"] <= 0:
-					play_str += wiz_name + \"'s \" + statuses[\"barrier\"].name + \"breaks!\\n\"
+					statuses.erase(\"barrier\")
+					play_str += wiz_name + \"'s \" + statuses[\"barrier\"].name + \" breaks!\\n\"
 				continue
 			play_str += wiz_name + \" takes \" + str(d) + \" damage.\\n\"
 			health -= d

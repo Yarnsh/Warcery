@@ -118,9 +118,13 @@ func _enable_rune_buttons():
 		r.disabled = false
 func _disable_rune_buttons():
 	for r in rune_buttons.get_children():
-		r.disabled = true"
+		r.disabled = true
 
-[node name="CombatUI" type="Control" index="0"]
+func _on_SpellBook_pressed():
+	get_parent().spell_book.show()
+"
+
+[node name="CombatUI" type="Control"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -503,7 +507,7 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 174.0
-margin_bottom = 419.0
+margin_bottom = 395.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 0
@@ -521,7 +525,7 @@ anchor_bottom = 0.0
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 167.0
-margin_bottom = 412.0
+margin_bottom = 388.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = true
 mouse_filter = 0
@@ -540,6 +544,30 @@ scroll_following = true
 selection_enabled = false
 override_selected_font_color = false
 _sections_unfolded = [ "Size Flags" ]
+
+[node name="SpellBook" type="Button" parent="PlayByPlay" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 399.0
+margin_right = 174.0
+margin_bottom = 419.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Spell Book"
+flat = false
+align = 1
 
 [node name="ViewportContainer" type="ViewportContainer" parent="." index="3"]
 
@@ -622,5 +650,7 @@ margin_bottom = 104.0
 [connection signal="pressed" from="GridContainer/I" to="." method="_on_I_pressed"]
 
 [connection signal="text_entered" from="Chat/LineEdit" to="." method="_on_LineEdit_text_entered"]
+
+[connection signal="pressed" from="PlayByPlay/SpellBook" to="." method="_on_SpellBook_pressed"]
 
 

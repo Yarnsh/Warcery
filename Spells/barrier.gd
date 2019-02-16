@@ -1,6 +1,6 @@
 extends Node
 
-const spell = "Shield"
+const spell = "Barrier"
 const description = "The go to for people with no timing."
 const runes = ["C", "D", "F"]
 const trigger = "cast"

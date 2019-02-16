@@ -9,6 +9,7 @@
 
 script/source = "extends Node
 
+onready var start_screen = $StartScreen
 onready var lobby = $Lobby
 onready var combat = $CombatUI
 onready var spell_book = $SpellBook
@@ -48,11 +49,17 @@ func host(port):
 	lobby.add_wizard(my_info, true)
 	lobby.show()
 
+func leave():
+	get_tree().set_network_peer(null)
+	show_start_screen()
+	lobby.clear()
+
 func _player_connected(id):
 	print(\"_player_connected(\" + str(id) + \")\")
 
 func _player_disconnected(id):
 	print(\"_player_disconnected(\" + str(id) + \")\")
+	lobby.remove_wizard(id)
 	player_info.erase(id) # Erase player from info
 
 func _connected_ok():
@@ -66,11 +73,11 @@ func _connected_ok():
 	rpc(\"register_player\", get_tree().get_network_unique_id(), my_info.get_info())
 
 func _server_disconnected():
-	# Server kicked us, show error and abort
-	print(\"_connected_ok()\")
+	leave()
+	print(\"_server_disconnected()\")
 
 func _connected_fail():
-	# Could not even connect to server, abort
+	leave()
 	print(\"_connected_fail()\")
 
 func _add_wizard(id, info):
@@ -92,12 +99,20 @@ remote func register_player(id, info):
 
 func show_combat(wiz1, wiz2):
 	combat.init_1v1(wiz1, wiz2)
+	start_screen.hide()
 	lobby.hide()
 	combat.show()
 
 func show_lobby():
+	start_screen.hide()
 	combat.hide()
-	lobby.show()"
+	lobby.show()
+
+func show_start_screen():
+	combat.hide()
+	lobby.hide()
+	start_screen.show()
+"
 
 [node name="Game" type="Control" index="0"]
 

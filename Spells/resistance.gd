@@ -9,4 +9,4 @@ const damage = []
 const status = []
 
 const self_damage = []
-const self_status = [{"name":"resistance", "turns":5, "amount":1}]
+const self_status = [{"name":"resistance", "turns":12, "amount":1}]
