@@ -75,7 +75,11 @@ func update():
 			if statuses[status].turns <= 0:
 				play_str += wiz_name + \" loses \" + statuses[status].name + \".\\n\"
 				statuses.erase(status)
-	return play_str"
+	return play_str
+
+func is_dead():
+	return health <= 0
+"
 
 [node name="Wizard" type="Node"]
 

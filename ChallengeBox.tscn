@@ -12,6 +12,7 @@ onready var lobby = get_parent().get_parent().get_parent().get_parent()
 var wizard = null
 var wins = 0
 var challenged = false
+var am_me = false
 
 func init_for_wizard(wiz, myself = false):
 	name_label.text = wiz.wiz_name
@@ -39,9 +40,12 @@ func set_challenging():
 	challenged = false
 
 slave func set_challengeable():
-	challenge_button.disabled = false
-	challenge_button.text = \"Challenge!\"
-	challenged = false
+	if am_me:
+		set_myself()
+	else:
+		challenge_button.disabled = false
+		challenge_button.text = \"Challenge!\"
+		challenged = false
 
 remote func set_challenging_you():
 	challenge_button.disabled = false
@@ -52,6 +56,7 @@ func set_myself():
 	challenge_button.disabled = true
 	challenge_button.text = \"This is me.\"
 	challenged = false
+	am_me = true
 
 
 func _on_Challenge_pressed():
