@@ -60,6 +60,7 @@ func _player_connected(id):
 func _player_disconnected(id):
 	print(\"_player_disconnected(\" + str(id) + \")\")
 	lobby.remove_wizard(id)
+	combat.handle_disconnect(id)
 	player_info.erase(id) # Erase player from info
 
 func _connected_ok():

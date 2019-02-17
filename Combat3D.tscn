@@ -1,9 +1,27 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Models/wizard.escn" type="PackedScene" id=1]
 
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Spatial
+
+onready var w1 = $\"Scene Root/Armature/AnimationPlayer\"
+onready var w2 = $\"Scene Root2/Armature/AnimationPlayer\"
+
+func _ready():
+	w1.play(\"idle\")
+	w2.play(\"idle\")
+
+func far_wiz_play(anim):
+	w1.play(anim)
+
+func close_wiz_play(anim):
+	w2.play(anim)"
+
 [node name="Combat3D" type="Spatial"]
 
+script = SubResource( 1 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="Scene Root" parent="." index="0" instance=ExtResource( 1 )]

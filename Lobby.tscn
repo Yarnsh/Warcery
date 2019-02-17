@@ -47,10 +47,14 @@ remote func show_combat(wiz1, wiz2):
 	get_parent().show_combat(wiz1, wiz2)
 
 remote func end_combat(wiz1, wiz2, winner):
-	challenger_list.get_node(str(wiz1)).set_challengeable()
-	challenger_list.get_node(str(wiz2)).set_challengeable()
-	challenger_list.get_node(str(wiz1)).rpc(\"set_challengeable\")
-	challenger_list.get_node(str(wiz2)).rpc(\"set_challengeable\")
+	var w1 = challenger_list.get_node(str(wiz1))
+	var w2 = challenger_list.get_node(str(wiz2))
+	if w1 != null:
+		w1.set_challengeable()
+		w1.rpc(\"set_challengeable\")
+	if w2 != null:
+		w2.set_challengeable()
+		w2.rpc(\"set_challengeable\")
 
 func _on_Exit_pressed():
 	get_parent().leave()
